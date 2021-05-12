@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Using Shiny to analyse Diamond Prices Per Cuts</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Using Shiny to analyse Diamond Prices Per Cuts">
+  <meta name="author" content="Wanda Ken - 11/05/2021">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  
+  <hgroup class="auto-fadein">
+    <h1>Using Shiny to analyse Diamond Prices Per Cuts</h1>
+    <h2></h2>
+    <p>Wanda Ken - 11/05/2021<br/></p>
+  </hgroup>
+  
+  <article></article>  
+  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  
+  <hgroup>
+    <h2>How the App has been built</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li><p>The application has been built using R Shiny package.</p></li>
+<li><p>The project consists of two files:</p>
+
+<ul>
+<li>ui.R which controls the interface and inputs of the application.</li>
+<li>server.R which controls what the application does.</li>
+<li>The source codes for the files have been loaded in Github link
+<a href="https://github.com/Wanda173/DevDataProduct/tree/main/Shiny%20Application">https://github.com/Wanda173/DevDataProduct/tree/main/Shiny%20Application</a></li>
+</ul></li>
+<li><p>The application has been deployed at the below link: (It can take a few seconds to load)
+<a href="https://wandaken.shinyapps.io/diamond/">https://wandaken.shinyapps.io/diamond/</a></p></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-2" style="background:;">
+  
+  <hgroup>
+    <h2>About the Dataset</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>The Diamonds dataset has been used which contains the prices and other attributes of almost 54,000 diamonds.
+The variables that are of interest in the analysis are:</p>
+
+<ul>
+<li>price - Price in US dollars</li>
+<li>cut - Quality of the cut (Fair, Good, Very Good, Premium, Ideal)</li>
+<li>clarity - Measurement of how clear the diamond (I1, SI2, SI1, VS2, VS1, VVS2, VVS1, IF)
+with I1 being the worst and IF being the best.</li>
+</ul>
+
+<h2>The App Inputs on the Sidebar Panel</h2>
+
+<ul>
+<li>The &quot;Type of Diamond cut&quot; can be selected from an input drop-down list.</li>
+<li>The &quot;Calculate the Mean Diamond Prices&quot; is a checkbox input.
+
+<ul>
+<li>When the checkbox is ticked, the mean details will appear on the Main panel. This is the default setting.</li>
+<li>When the checkbox is blanked out i.e not ticked, the details of the mean are not shown.</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  
+  <hgroup>
+    <h2>The Plot on the Main Panel</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <ul>
+<li><p>A histogram is displayed for the diamond prices for the diamond cut selected from the drop down list.</p></li>
+<li><p>Each bar is filled in colors of the clarity values.</p></li>
+<li><p>When the checkbox is ticked, calculations on the server are triggered based on the diamond cut selected:</p>
+
+<ul>
+<li>A vertical red line appears on the histogram representing the mean price for the diamond cut.</li>
+<li>The mean price will be calculated beneath the plot.</li>
+<li>The % of records from the dataset that have a price above the mean price will also been calculated. </li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  
+  <hgroup>
+    <h2>Server Calculation used to display the mean details</h2>
+  </hgroup>
+  
+  <article data-timings="">
+    <p>dispmean &lt;- reactive({</p>
+
+<pre><code> set.seed(4670)
+ # Get the data for the select cut of diamond
+ dt &lt;- subset(diamonds, cut==input$cutLov)
+ # Calculate the mean
+ mu &lt;- round(mean(dt$price))
+
+ txt1 &lt;- paste(&quot; Mean Diamond Price for Cut &#39;&quot;,input$cutLov,&quot;&#39; is $&quot;,mu)
+
+ # Calculate the % of records above the mean for the Diamond Cut
+ cnt &lt;- NROW(subset(dt,dt$price &gt; mu))
+ tot &lt;- NROW(dt)
+ per &lt;- round((cnt/tot)*100)
+
+ txt2 &lt;- ifelse(input$show_mean, paste(txt1, &#39; with &#39;, per,&quot; % of the records above the mean price &quot;), &quot;&quot;)
+</code></pre>
+
+<p>})</p>
+
+  </article>
+  <!-- Presenter Notes -->
+  
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='How the App has been built'>
+         1
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='About the Dataset'>
+         2
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='The Plot on the Main Panel'>
+         3
+      </a>
+    </li>
+    
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Server Calculation used to display the mean details'>
+         4
+      </a>
+    </li>
+    
+    </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
