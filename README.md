@@ -1,4 +1,4 @@
-Instructions for the Submisson
+## Instructions for the Submisson
 
 This peer assessed assignment submission has two parts. 
 1) First, you will create a Shiny application and deploy it on Rstudio's servers. 
